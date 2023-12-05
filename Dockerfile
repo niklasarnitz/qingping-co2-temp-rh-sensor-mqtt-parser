@@ -1,6 +1,6 @@
 FROM oven/bun:latest
 WORKDIR /app
 COPY . .
-RUN bun install --frozen-lockfile --production
+RUN bun install
 
 CMD ["bun", "index.ts"]

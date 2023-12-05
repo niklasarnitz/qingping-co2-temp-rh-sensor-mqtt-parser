@@ -19,7 +19,7 @@ export class Env {
     }
 
     if (!Bun.env.SENSOR_TOPIC) {
-      throw new Error("SENSOR_ID env variable is not set");
+      throw new Error("SENSOR_TOPIC env variable is not set");
     }
 
     if (!Bun.env.SENSOR_MAC) {

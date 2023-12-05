@@ -1,27 +1,40 @@
-const parseKeys = (bytes: Uint8Array) => {
-  const payloadLength = bytes[3] | (bytes[4] << 8);
+import { parseKeys } from "./utils/parseKeys";
 
-  const data: Record<string, Uint8Array> = {};
-
-  // Start at 5 because the first 5 bytes are the protocol header and payload length
-  for (let i = 5; i < payloadLength - 1; ) {
-    const key = bytes[i];
-    const length = bytes[i + 1] | (bytes[i + 2] << 8);
-
-    const value: Uint8Array = bytes.slice(i + 3, i + 3 + length);
-
-    data[`0x${Number(key).toString(16)}`] = value;
-
-    i += 3 + length;
-  }
-
-  return data;
-};
+export type DataKey =
+  | "historicalData"
+  | "uploadDataInterval"
+  | "recordDataInterval"
+  | "undocumentedValue"
+  | "temperatureUnit"
+  | "firmware_version"
+  | "timestamp"
+  | "temperature"
+  | "humidity"
+  | "co2_ppm"
+  | "battery"
+  | "isGoingIntoLowPowerMode"
+  | "hardwareVersion"
+  | "isPluggedInToPower"
+  | "wirelessModuleFirmwareVersion"
+  | "mcuFirmwareVersion"
+  | "productId"
+  | "co2MeasurementInterval"
+  | "autoOffTime"
+  | "timeMode"
+  | "co2ASC"
+  | "co2OffsetPercentage"
+  | "co2IsBeingCalibrated"
+  | "co2Offset"
+  | "temperatureOffset"
+  | "temperatureOffsetPercentage"
+  | "humidityOffset"
+  | "humidityOffsetPercentage";
 
 export const parseData = (inputBytes: Uint8Array) => {
   const data = parseKeys(inputBytes);
 
-  const exportableData: Record<string, string | boolean | number> = {};
+  const exportableData: Record<DataKey, string | boolean | number> =
+    {} as Record<DataKey, string | boolean | number>;
 
   for (const key in data) {
     switch (key) {
@@ -79,7 +92,8 @@ export const parseData = (inputBytes: Uint8Array) => {
           (realSensorData[2] << 16) |
           (realSensorData[3] << 24);
 
-        const temperature = (((combinedData >> 4) & 0xfff) - 500) / 10;
+        const temperature =
+          ((((realSensorData[1] << 8) | realSensorData[0]) & 0xfff) - 500) / 10;
         exportableData["temperature"] = temperature;
 
         const humidity = (combinedData & 0xfff) / 10;
@@ -88,7 +102,7 @@ export const parseData = (inputBytes: Uint8Array) => {
         const co2PPM = realSensorData[5] | (realSensorData[4] << 8);
         exportableData["co2_ppm"] = co2PPM;
 
-        const battery = (realSensorData[6] / 255) * 100;
+        const battery = realSensorData[6];
         exportableData["battery"] = battery;
         break;
 
@@ -123,7 +137,10 @@ export const parseData = (inputBytes: Uint8Array) => {
 
       // ProductID
       case "0x38":
-        exportableData["productId"] = String.fromCharCode(...data[key]);
+        if (data[key]) {
+          exportableData["productId"] = String.fromCharCode(...data[key]);
+        }
+
         break;
 
       // Interval of CO2 Measurement
@@ -193,7 +210,7 @@ export const parseData = (inputBytes: Uint8Array) => {
         break;
 
       default:
-        console.log("unknown key: ", Number(key).toString(16));
+        console.log("Unknown data key: ", Number(key).toString(16));
     }
   }
 

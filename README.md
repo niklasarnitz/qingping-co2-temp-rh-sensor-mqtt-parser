@@ -11,7 +11,10 @@ If you want to learn how to enable the private cloud functionality, you can read
 - `MQTT_USER`: MQTT User (optional)
 - `MQTT_PASSWORD`: MQTT Password (optional)
 - `SENSOR_TOPIC`: The MQTT Topic, where the Sensor publishes it's raw data (required)
-- `CUSTOM_PARSED_DATA_TOPIC`: The MQTT Topic where the parsed data get's published (optional)
+- `SENSOR_MAC`: The mac address of the sensor shown in the qingping developer portal (required)
+- `CUSTOM_PARSED_DATA_TOPIC`: The MQTT Topic where the parsed data get's published (true by default, optional)
+- `ADVERTISE_HOME_ASSISTANT`: A Boolean which enables or disables publishing a Home Assistant Discovery Packet (optional)
+- `HOME_ASSISTANT_DEVICE_NAME`: The Device Name which get's sent to Home Assistant (optional, the devices mac get's used by default)
 
 ## Docker deployment
 

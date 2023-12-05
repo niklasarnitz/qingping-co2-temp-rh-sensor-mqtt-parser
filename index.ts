@@ -1,35 +1,32 @@
 import mqtt from "mqtt";
 import { checkProtocolHeader } from "./src/utils/checkProtocolHeader";
 import { parseData } from "./src/parser";
+import { Env } from "./src/utils/Env";
+import { ObjectHelper } from "@ainias42/js-helper";
+import {
+  getHomeassistantMQTTTopic as getHomeAssistantMQTTTopic,
+  getMQTTTopic,
+} from "./src/utils/getMQTTTopic";
+import { getHomeassistantDiscoveryJson as getHomeAssistantDiscoveryJson } from "./src/utils/getHomassistantDiscoveryJson";
 
-if (!Bun.env.MQTT_SERVER) {
-  throw new Error("MQTT_SERVER env variable is not set");
-}
-
-if (!Bun.env.MQTT_PORT) {
-  throw new Error("MQTT_PORT env variable is not set");
-}
-
-if (!Bun.env.SENSOR_TOPIC) {
-  throw new Error("SENSOR_ID env variable is not set");
-}
+Env.init();
 
 const mqttClient =
-  Bun.env.MQTT_USER && Bun.env.MQTT_PASSWORD
-    ? mqtt.connect(`mqtt://${Bun.env.MQTT_SERVER}:${Bun.env.MQTT_PORT}`, {
-        username: Bun.env.MQTT_USER,
-        password: Bun.env.MQTT_PASSWORD,
+  Env.MQTT_USER && Env.MQTT_PASSWORD
+    ? mqtt.connect(`mqtt://${Env.MQTT_SERVER}:${Env.MQTT_PORT}`, {
+        username: Env.MQTT_USER,
+        password: Env.MQTT_PASSWORD,
       })
-    : mqtt.connect(`mqtt://${Bun.env.MQTT_SERVER}:${Bun.env.MQTT_PORT}`);
+    : mqtt.connect(`mqtt://${Env.MQTT_SERVER}:${Env.MQTT_PORT}`);
 
 mqttClient.on("connect", () => {
   console.log("Successfully connected to MQTT");
 });
 
-mqttClient.subscribe(Bun.env.SENSOR_TOPIC);
+mqttClient.subscribe(Env.SENSOR_TOPIC);
 
 mqttClient.on("message", (topic, message) => {
-  if (topic === Bun.env.SENSOR_TOPIC) {
+  if (topic === Env.SENSOR_TOPIC) {
     const messageAsUint8Array = new Uint8Array(message);
 
     if (!checkProtocolHeader(messageAsUint8Array)) {
@@ -38,24 +35,28 @@ mqttClient.on("message", (topic, message) => {
 
     const parsedMessageData = parseData(messageAsUint8Array);
 
-    for (const key in parsedMessageData) {
+    ObjectHelper.keys(parsedMessageData).forEach((key) => {
       if (key === "timestamp") {
         console.log(
           `Received message with timestamp ${parsedMessageData[key]}`
         );
       }
 
-      if (Bun.env.CUSTOM_PARSED_DATA_TOPIC) {
-        mqttClient.publish(
-          `${Bun.env.CUSTOM_PARSED_DATA_TOPIC}/${key}`,
-          JSON.stringify(parsedMessageData[key])
-        );
-      } else {
-        mqttClient.publish(
-          `${Bun.env.SENSOR_TOPIC.replace("/up", "")}/parsed/${key}`,
-          JSON.stringify(parsedMessageData[key])
-        );
+      if (Env.ADVERTISE_HOME_ASSISTANT) {
+        const discoveryData = getHomeAssistantDiscoveryJson(key);
+
+        if (discoveryData) {
+          mqttClient.publish(
+            getHomeAssistantMQTTTopic(key),
+            JSON.stringify(discoveryData)
+          );
+        }
       }
-    }
+
+      mqttClient.publish(
+        getMQTTTopic(key),
+        JSON.stringify(parsedMessageData[key])
+      );
+    });
   }
 });

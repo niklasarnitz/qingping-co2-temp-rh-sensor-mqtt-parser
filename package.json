@@ -9,6 +9,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@ainias42/js-helper": "^0.8.10",
     "mqtt": "^5.3.2"
   }
 }

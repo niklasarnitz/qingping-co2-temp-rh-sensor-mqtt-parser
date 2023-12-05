@@ -1,0 +1,10 @@
+services:
+  qingping-co2-temp-rh-sensor-parser:
+    build: .
+    environment:
+      - MQTT_HOST=
+      - MQTT_PORT=
+      - MQTT_USER=
+      - MQTT_PASSWORD=
+      - SENSOR_TOPIC=
+      # - CUSTOM_PARSED_DATA_TOPIC=

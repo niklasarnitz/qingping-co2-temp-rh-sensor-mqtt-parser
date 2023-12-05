@@ -1,5 +1,5 @@
 {
-  "name": "qinping-co2-temp-rh-sensor-parser",
+  "name": "qingping-co2-temp-rh-sensor-parser",
   "module": "index.ts",
   "type": "module",
   "devDependencies": {

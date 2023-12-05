@@ -16,7 +16,15 @@ If you want to learn how to enable the private cloud functionality, you can read
 - `ADVERTISE_HOME_ASSISTANT`: A Boolean which enables or disables publishing a Home Assistant Discovery Packet (optional)
 - `HOME_ASSISTANT_DEVICE_NAME`: The Device Name which get's sent to Home Assistant (optional, the devices mac get's used by default)
 
+## Home Assistant support
+
+By default temperature, humidity, CO2 and the battery state of the sensor are being announced via the Home Assistant discovery protocol, so the sensor should be configured automatically.
+
+If you need any other data which also gets parsed and published by this piece of software, you can use the MQTT Integration in Home Assistant for that.
+
 ## Docker deployment
+
+Just run the provided docker compose file
 
 ## Development
 

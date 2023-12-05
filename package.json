@@ -1,0 +1,14 @@
+{
+  "name": "qinping-co2-temp-rh-sensor-parser",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "mqtt": "^5.3.2"
+  }
+}

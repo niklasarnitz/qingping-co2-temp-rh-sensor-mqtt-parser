@@ -1,6 +1,10 @@
-FROM oven/bun:latest
-WORKDIR /app
-COPY . .
+FROM oven/bun
+
+WORKDIR /usr/src/app
+COPY package*.json bun.lockb ./
 RUN bun install
+COPY . .
+
+ENV NODE_ENV production
 
 CMD ["bun", "index.ts"]

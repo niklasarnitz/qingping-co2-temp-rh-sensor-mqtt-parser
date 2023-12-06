@@ -86,8 +86,6 @@ export const parseData = (inputBytes: Uint8Array) => {
 
         const realSensorData = sensorData.slice(4);
 
-        console.log(realSensorData.byteLength);
-
         const combinedData =
           realSensorData[0] |
           (realSensorData[1] << 8) |

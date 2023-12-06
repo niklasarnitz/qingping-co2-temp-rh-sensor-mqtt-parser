@@ -86,23 +86,23 @@ export const parseData = (inputBytes: Uint8Array) => {
 
         const realSensorData = sensorData.slice(4);
 
+        console.log(realSensorData.byteLength);
+
         const combinedData =
           realSensorData[0] |
           (realSensorData[1] << 8) |
-          (realSensorData[2] << 16) |
-          (realSensorData[3] << 24);
+          (realSensorData[2] << 16);
 
-        const temperature =
-          ((((realSensorData[1] << 8) | realSensorData[0]) & 0xfff) - 500) / 10;
+        const temperature = ((combinedData >> 12) - 500.0) / 10.0;
         exportableData["temperature"] = temperature;
 
-        const humidity = (combinedData & 0xfff) / 10;
+        const humidity = (combinedData & 0x000fff) / 10;
         exportableData["humidity"] = humidity;
 
-        const co2PPM = realSensorData[5] | (realSensorData[4] << 8);
+        const co2PPM = realSensorData[3] | (realSensorData[4] << 8);
         exportableData["co2_ppm"] = co2PPM;
 
-        const battery = realSensorData[6];
+        const battery = realSensorData[5];
         exportableData["battery"] = battery;
         break;
 

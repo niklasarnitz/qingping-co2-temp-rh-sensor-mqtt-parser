@@ -24,7 +24,7 @@ mqttClient.on("connect", () => {
 });
 
 mqttClient.subscribe(Env.SENSOR_TOPIC);
-console.log(`Subscribed to topic ${sensorTopic}`);
+console.log(`Subscribed to topic ${Env.SENSOR_TOPIC}`);
 
 mqttClient.on("message", (topic, message) => {
   if (topic === sensorTopic) {

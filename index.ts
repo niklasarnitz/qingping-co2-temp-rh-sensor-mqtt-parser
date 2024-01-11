@@ -24,6 +24,7 @@ mqttClient.on("connect", () => {
 });
 
 mqttClient.subscribe(Env.SENSOR_TOPIC);
+console.log(`Subscribed to topic ${Env.SENSOR_TOPIC}`);
 
 mqttClient.on("message", (topic, message) => {
   if (topic === Env.SENSOR_TOPIC) {
@@ -46,16 +47,22 @@ mqttClient.on("message", (topic, message) => {
         const discoveryData = getHomeAssistantDiscoveryJson(key);
 
         if (discoveryData) {
+          const topic = getHomeAssistantMQTTTopic(key);
+          const stringifiedDiscoveryData = JSON.stringify(discoveryData);
           mqttClient.publish(
-            getHomeAssistantMQTTTopic(key),
-            JSON.stringify(discoveryData)
+            topic,
+            stringifiedDiscoveryData
           );
+          console.log(`Published discovery data to topic ${topic}: ${stringifiedDiscoveryData}`);
         }
       }
 
+      const topic = getMQTTTopic(key);
+      const stringifiedData = JSON.stringify(parsedMessageData[key]);
+      console.log(`Publishing ${topic}: ${stringifiedData}`);
       mqttClient.publish(
-        getMQTTTopic(key),
-        JSON.stringify(parsedMessageData[key])
+        topic,
+        stringifiedData
       );
     });
   }

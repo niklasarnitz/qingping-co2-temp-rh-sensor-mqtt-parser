@@ -48,7 +48,7 @@ mqttClient.on("message", (topic, message) => {
 
         if (discoveryData) {
           const topic = getHomeAssistantMQTTTopic(key);
-          const stringifiedData = JSON.stringify(discoveryData);
+          const stringifiedDiscoveryData = JSON.stringify(discoveryData);
           mqttClient.publish(
             topic,
             stringifiedData

@@ -3,16 +3,12 @@ name: Docker Image Latest
 on:
   workflow_dispatch:
   push:
-    branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
+    branches: ["master"]
 
 env:
   REGISTRY: ghcr.io
 
-
 jobs:
-
   build-and-publish-latest:
     runs-on: ubuntu-latest
 
@@ -28,7 +24,6 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-#            docker.io/${{ github.repository }}
           images: |
             ghcr.io/${{ github.repository }}
           tags: |
@@ -47,7 +42,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
 
       - name: Build and push
         uses: docker/build-push-action@v5

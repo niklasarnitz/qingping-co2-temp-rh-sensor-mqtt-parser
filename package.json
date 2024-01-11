@@ -3,6 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
+    "@biomejs/biome": "1.5.1",
     "bun-types": "latest"
   },
   "peerDependencies": {
@@ -11,5 +12,9 @@
   "dependencies": {
     "@ainias42/js-helper": "^0.8.10",
     "mqtt": "^5.3.2"
+  },
+  "scripts": {
+    "lint": "bunx @biomejs/biome check ./**/*.ts",
+    "typecheck": "bunx tsc --noEmit --project tsconfig.json"
   }
 }

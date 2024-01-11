@@ -27,7 +27,7 @@ mqttClient.subscribe(Env.SENSOR_TOPIC);
 console.log(`Subscribed to topic ${Env.SENSOR_TOPIC}`);
 
 mqttClient.on("message", (topic, message) => {
-  if (topic === sensorTopic) {
+  if (topic === Env.SENSOR_TOPIC) {
     const messageAsUint8Array = new Uint8Array(message);
 
     if (!checkProtocolHeader(messageAsUint8Array)) {

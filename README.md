@@ -22,9 +22,10 @@ By default temperature, humidity, CO2 and the battery state of the sensor are be
 
 If you need any other data which also gets parsed and published by this piece of software, you can use the MQTT Integration in Home Assistant for that.
 
-## Docker deployment
+## Docker deployment options
 
-Just run the provided docker compose file
+- Run the provided docker compose file
+- docker pull ghcr.io/niklasarnitz/pr_qingping-co2-temp-rh-sensor-mqtt-parser:latest
 
 ## Development
 

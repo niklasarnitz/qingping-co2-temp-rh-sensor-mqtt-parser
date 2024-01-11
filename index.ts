@@ -23,7 +23,6 @@ mqttClient.on("connect", () => {
   console.log("Successfully connected to MQTT");
 });
 
-const sensorTopic = Env.SENSOR_TOPIC;
 mqttClient.subscribe(sensorTopic);
 console.log(`Subscribed to topic ${sensorTopic}`);
 

@@ -5,7 +5,7 @@ import { getMQTTTopic } from "./getMQTTTopic";
 const getJsonObject = (
   key: DataKey,
   device_class: "temperature" | "humidity" | "carbon_dioxide" | "battery",
-  unit_of_measurement?: string
+  unit_of_measurement?: "°C" | "%" | "ppm"
 ) => {
   return {
     device: {

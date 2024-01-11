@@ -53,7 +53,7 @@ mqttClient.on("message", (topic, message) => {
             topic,
             stringifiedDiscoveryData
           );
-          console.log(`Published discovery data to topic ${topic}: ${stringifiedData}`);
+          console.log(`Published discovery data to topic ${topic}: ${stringifiedDiscoveryData}`);
         }
       }
 

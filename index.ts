@@ -51,7 +51,7 @@ mqttClient.on("message", (topic, message) => {
           const stringifiedDiscoveryData = JSON.stringify(discoveryData);
           mqttClient.publish(
             topic,
-            stringifiedData
+            stringifiedDiscoveryData
           );
           console.log(`Published discovery data to topic ${topic}: ${stringifiedData}`);
         }

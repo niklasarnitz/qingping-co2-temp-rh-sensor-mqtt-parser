@@ -23,10 +23,12 @@ mqttClient.on("connect", () => {
   console.log("Successfully connected to MQTT");
 });
 
-mqttClient.subscribe(Env.SENSOR_TOPIC);
+const sensorTopic = Env.SENSOR_TOPIC;
+mqttClient.subscribe(sensorTopic);
+console.log(`Subscribed to topic ${sensorTopic}`);
 
 mqttClient.on("message", (topic, message) => {
-  if (topic === Env.SENSOR_TOPIC) {
+  if (topic === sensorTopic) {
     const messageAsUint8Array = new Uint8Array(message);
 
     if (!checkProtocolHeader(messageAsUint8Array)) {
@@ -46,16 +48,22 @@ mqttClient.on("message", (topic, message) => {
         const discoveryData = getHomeAssistantDiscoveryJson(key);
 
         if (discoveryData) {
+          const topic = getHomeAssistantMQTTTopic(key);
+          const stringifiedData = JSON.stringify(discoveryData);
           mqttClient.publish(
-            getHomeAssistantMQTTTopic(key),
-            JSON.stringify(discoveryData)
+            topic,
+            stringifiedData
           );
+          console.log(`Published discovery data to topic ${topic}: ${stringifiedData}`);
         }
       }
 
+      const topic = getMQTTTopic(key);
+      const stringifiedData = JSON.stringify(parsedMessageData[key]);
+      console.log(`Publishing ${topic}: ${stringifiedData}`);
       mqttClient.publish(
-        getMQTTTopic(key),
-        JSON.stringify(parsedMessageData[key])
+        topic,
+        stringifiedData
       );
     });
   }

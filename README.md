@@ -25,7 +25,7 @@ If you need any other data which also gets parsed and published by this piece of
 ## Docker deployment options
 
 - Run the provided docker compose file
-- docker pull ghcr.io/niklasarnitz/pr_qingping-co2-temp-rh-sensor-mqtt-parser:latest
+- docker pull ghcr.io/niklasarnitz/qingping-co2-temp-rh-sensor-mqtt-parser:latest
 
 ## Development
 
